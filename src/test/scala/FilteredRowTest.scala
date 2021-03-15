@@ -19,7 +19,7 @@ class FilteredRowTest extends AnyFlatSpec  with should.Matchers {
       filteredRow.isRight should be (false)
   }
 
-  it should "fail if column not exist" in {
+  it should "fail if a column not exist" in {
     val filteredRow = FilteredRow.create(List("Spain", "Dark", "Black", "907"), List(0, 1, 4), 3)
     filteredRow.isRight should be (false)
   }
