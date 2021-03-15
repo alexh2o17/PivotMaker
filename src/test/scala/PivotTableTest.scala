@@ -70,7 +70,7 @@ class PivotTableTest extends AnyFlatSpec  with should.Matchers  {
     val pivotTable  = PivotTable.create(data,sum,List("Nations","Eyes","Hair"),"Total")
     pivotTable.isRight should be (true)
     val realPivot = pivotTable.right.get
-    val res = realPivot.getResult()
+    val res = realPivot.getResultByValue()
     res.isRight should be (true)
     val realRes  = res.right.get
     realRes.size should be (4)
@@ -83,7 +83,7 @@ class PivotTableTest extends AnyFlatSpec  with should.Matchers  {
     val pivotTable  = PivotTable.create(data,sum,List("Nations","Eyes","Hair"),"Total")
     pivotTable.isRight should be (true)
     val realPivot = pivotTable.right.get
-    val res = realPivot.getResult("France","Green")
+    val res = realPivot.getResultByValue("France","Green")
     res.isRight should be (true)
     val realRes  = res.right.get
     realRes.head._2 should be (288)
@@ -94,7 +94,7 @@ class PivotTableTest extends AnyFlatSpec  with should.Matchers  {
     val pivotTable  = PivotTable.create(data,sum,List("Nations","Eyes","Hair"),"Total")
     pivotTable.isRight should be (true)
     val realPivot = pivotTable.right.get
-    val res = realPivot.getResult("France","Green","Black")
+    val res = realPivot.getResultByValue("France","Green","Black")
     res.isRight should be (true)
     val realRes  = res.right.get
     realRes.size should be (1)
@@ -102,11 +102,17 @@ class PivotTableTest extends AnyFlatSpec  with should.Matchers  {
     realRes.head._1 should be ("Black")
     realRes.head._2 should be (857)
   }
+  it should "fail if without data" in {
+    val pivotTable  = PivotTable.create(Nil,sum,List("Nations","Eyes","Hair"),"Total")
+    pivotTable.isRight should be (false)
+    pivotTable.left.get.getMessage should be ("Origin Table is empty")
+  }
+
   it should "fail if we use too conditions" in {
     val pivotTable  = PivotTable.create(data,sum,List("Nations","Eyes","Hair"),"Total")
     pivotTable.isRight should be (true)
     val realPivot = pivotTable.right.get
-    val res = realPivot.getResult("France","Green","Black","Black")
+    val res = realPivot.getResultByValue("France","Green","Black","Black")
     res.isRight should be (false)
   }
   it should "get only first level on Nations query" in {
@@ -134,5 +140,12 @@ class PivotTableTest extends AnyFlatSpec  with should.Matchers  {
     realRes.tail.head._2.nodes.size should be (2)
     realRes.tail.tail.head._2.nodes.size should be (4)
     realRes.last._2.nodes.size should be (4)
+  }
+  it should "fail with wrong aggregation field" in {
+    val pivotTable  = PivotTable.create(data,sum,List("Nations","Eyes","Hair"),"Total")
+    pivotTable.isRight should be (true)
+    val realPivot = pivotTable.right.get
+    val res = realPivot.getResultByIndex("EyesError")
+    res.isRight should be (false)
   }
 }

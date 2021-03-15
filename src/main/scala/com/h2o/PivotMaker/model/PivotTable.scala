@@ -44,7 +44,7 @@ object PivotHeader extends ErrorHandler{
 
 case class PivotTable (pivotHeader: PivotHeader,nodes: Map[String,PivotNode]) {
 
-  def getResult(value: String*) : Either[Throwable,Map[String,Int]] = {
+  def getResultByValue(value: String*) : Either[Throwable,Map[String,Int]] = {
     if(value.size > pivotHeader.getAggregationOrderName.size) Left(new RuntimeException("Too many argument for these request")) else recursiveResult(value,Right(PivotNode("",0,nodes)))
   }
 
@@ -84,9 +84,13 @@ object PivotTable extends ErrorHandler {
   def create(data: List[List[String]], aggregationFunction: List[Int] => Int, aggregationOrder: List[String], resultIndex: String) : Either[Throwable,PivotTable] = {
     for {
       table <- checkSize(data)
+      _ = logger.info("Starting to create Pivot Header")
       pivotHeader <- PivotHeader.getHeader(table._1,aggregationOrder,resultIndex)
+      _ = logger.info("Filter useless fields")
       filteredRows = table._2.map(FilteredRow.create(_,pivotHeader.getAllIndices,pivotHeader.resultIndex.index)).collect{case Right(value) => value}
+      _ = logger.info("Creating Pivot Nodes")
       finalData <- try{Right(createNodes(filteredRows,aggregationFunction))} catch {case e: Throwable => Left(e)}
+      _ = logger.info("Returning Pivot Table")
     } yield PivotTable(pivotHeader,finalData)
   }
 
