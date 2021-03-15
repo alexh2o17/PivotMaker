@@ -10,6 +10,7 @@ object FilteredRow extends ErrorHandler {
     for {
     resIndex <- row.lift(resultIndex).toRight(leftError("Result value not found"))
     result <-  getResult(resIndex)
+    //Column are ordered by aggregation order
     values <- getValues(orderIndex.map(index => row.lift(index)))
     } yield FilteredRow(values,result)
 

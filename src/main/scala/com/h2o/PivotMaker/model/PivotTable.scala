@@ -87,6 +87,7 @@ object PivotTable extends ErrorHandler {
       _ = logger.info("Starting to create Pivot Header")
       pivotHeader <- PivotHeader.getHeader(table._1,aggregationOrder,resultIndex)
       _ = logger.info("Filter useless fields")
+      //Get only valid rows (with all value in aggregation order fields)
       filteredRows = table._2.map(FilteredRow.create(_,pivotHeader.getAllIndices,pivotHeader.resultIndex.index)).collect{case Right(value) => value}
       _ = logger.info("Creating Pivot Nodes")
       finalData <- try{Right(createNodes(filteredRows,aggregationFunction))} catch {case e: Throwable => Left(e)}

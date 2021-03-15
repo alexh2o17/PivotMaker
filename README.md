@@ -18,7 +18,7 @@ The aim of the project is to create a java library able to create Pivot Table.
 
 ## How To Use
 
-To clone and run test, you'll need [Git](https://git-scm.com), [wget](https://www.gnu.org/software/wget/) and [Maven](https://maven.apache.org/)  installed on your computer. When you installed these software you can start to test the library:
+To clone and run test, you'll need [Git](https://git-scm.com) and [Maven](https://maven.apache.org/)  installed on your computer. When you installed these software you can start to test the library:
 
 #### 1) Clone repo
 Use git to clone this repo. Please remember that all files needs to be in a folder named "truefilm" (case insensitive)
