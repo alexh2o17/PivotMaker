@@ -68,7 +68,7 @@ The Pivot Table in output needs to be able to be queried to obtain the value of 
 
 The Pivot Table is represented by a Tree, where every node is composed by a name, a result and children nodes:
 
-![alt text](https://ibb.co/hRYTGsK)
+![Alt text](img/model.png?raw=true "Model")
 
 In the Libray the Pivot Table is composed by a PivotHeader, that contains information about aggregation order, and a Map[String, PivotNode], that defines the tree.
 
